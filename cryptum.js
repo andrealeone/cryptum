@@ -71,7 +71,7 @@
 	      this.clamp();
 	      if (thisSigBytes % 4){
           for (var i = 0; i < thatSigBytes; i++){
-            var thatByte = (thatWords[i >>> 2] >>> (24 - (i % 4) * 8)) & 0xff;
+            var thatByte = (thatWords[i  >>> 2] >>> (24 - (i % 4) * 8)) & 0xff;
             thisWords[(thisSigBytes + i) >>> 2] |= thatByte << (24 - ((thisSigBytes + i) % 4) * 8);
           }
 	      } else {
@@ -262,9 +262,9 @@
 				wordArray.clamp();
         var base64Chars = [];
         for(var i = 0; i < sigBytes; i += 3){
-          var byte1 = (words[i >>> 2]       >>> (24 - (i % 4) * 8))       & 0xff;
-          var byte2 = (words[(i + 1) >>> 2] >>> (24 - ((i + 1) % 4) * 8)) & 0xff;
-          var byte3 = (words[(i + 2) >>> 2] >>> (24 - ((i + 2) % 4) * 8)) & 0xff;
+          var byte1 = (words[i >>> 2]        >>>  (24 - (i % 4) * 8))        &  0xff;
+          var byte2 = (words[(i + 1) >>> 2]  >>>  (24 - ((i + 1) % 4) * 8))  &  0xff;
+          var byte3 = (words[(i + 2) >>> 2]  >>>  (24 - ((i + 2) % 4) * 8))  &  0xff;
           var triplet = (byte1 << 16) | (byte2 << 8) | byte3;
           for(var j = 0; (j < 4) && (i + j * 0.75 < sigBytes); j++){
             base64Chars.push(map.charAt((triplet >>> (6 * (3 - j))) & 0x3f));
@@ -292,8 +292,8 @@
         var nBytes = 0;
         for(var i = 0; i < base64StrLength; i++){
           if(i % 4){
-            var bits1 = map.indexOf(base64Str.charAt(i - 1)) << ((i % 4) * 2);
-            var bits2 = map.indexOf(base64Str.charAt(i)) >>> (6 - (i % 4) * 2);
+            var bits1 = map.indexOf(base64Str.charAt(i - 1))  <<  ((i % 4) * 2);
+            var bits2 = map.indexOf(base64Str.charAt(i))  >>> (6 - (i % 4) * 2);
             var bitsCombined = bits1 | bits2;
             words[nBytes >>> 2] |= (bitsCombined) << (24 - (nBytes % 4) * 8);
             nBytes++;
@@ -319,8 +319,10 @@
     var MD5 = C_algo.MD5 = Hasher.extend({
       _doReset: function(){
         this._hash = new WordArray.init([
-          0x67452301, 0xefcdab89,
-          0x98badcfe, 0x10325476
+          0x67452301,
+          0xefcdab89,
+          0x98badcfe,
+          0x10325476
         ]);
       },
       _doProcessBlock: function(M, offset){
@@ -328,21 +330,21 @@
           var offset_i = offset + i;
           var M_offset_i = M[offset_i];
           M[offset_i] = (
-            (((M_offset_i << 8)  | (M_offset_i >>> 24)) & 0x00ff00ff) |
-            (((M_offset_i << 24) | (M_offset_i >>> 8))  & 0xff00ff00)
+            (((M_offset_i <<   8) | (M_offset_i >>> 24)) & 0x00ff00ff) |
+            (((M_offset_i <<  24) | (M_offset_i >>>  8)) & 0xff00ff00)
           );
         }
         var H = this._hash.words;
-        var M_offset_0  = M[offset + 0];
-        var M_offset_1  = M[offset + 1];
-        var M_offset_2  = M[offset + 2];
-        var M_offset_3  = M[offset + 3];
-        var M_offset_4  = M[offset + 4];
-        var M_offset_5  = M[offset + 5];
-        var M_offset_6  = M[offset + 6];
-        var M_offset_7  = M[offset + 7];
-        var M_offset_8  = M[offset + 8];
-        var M_offset_9  = M[offset + 9];
+        var M_offset_0  = M[offset +  0];
+        var M_offset_1  = M[offset +  1];
+        var M_offset_2  = M[offset +  2];
+        var M_offset_3  = M[offset +  3];
+        var M_offset_4  = M[offset +  4];
+        var M_offset_5  = M[offset +  5];
+        var M_offset_6  = M[offset +  6];
+        var M_offset_7  = M[offset +  7];
+        var M_offset_8  = M[offset +  8];
+        var M_offset_9  = M[offset +  9];
         var M_offset_10 = M[offset + 10];
         var M_offset_11 = M[offset + 11];
         var M_offset_12 = M[offset + 12];
@@ -353,67 +355,67 @@
         var b = H[1];
         var c = H[2];
         var d = H[3];
-        a = FF(a, b, c, d, M_offset_0,  7,  T[0]);
+        a = FF(a, b, c, d, M_offset_0,   7, T[0]);
         d = FF(d, a, b, c, M_offset_1,  12, T[1]);
         c = FF(c, d, a, b, M_offset_2,  17, T[2]);
         b = FF(b, c, d, a, M_offset_3,  22, T[3]);
-        a = FF(a, b, c, d, M_offset_4,  7,  T[4]);
+        a = FF(a, b, c, d, M_offset_4,   7, T[4]);
         d = FF(d, a, b, c, M_offset_5,  12, T[5]);
         c = FF(c, d, a, b, M_offset_6,  17, T[6]);
         b = FF(b, c, d, a, M_offset_7,  22, T[7]);
-        a = FF(a, b, c, d, M_offset_8,  7,  T[8]);
+        a = FF(a, b, c, d, M_offset_8,   7, T[8]);
         d = FF(d, a, b, c, M_offset_9,  12, T[9]);
         c = FF(c, d, a, b, M_offset_10, 17, T[10]);
         b = FF(b, c, d, a, M_offset_11, 22, T[11]);
-        a = FF(a, b, c, d, M_offset_12, 7,  T[12]);
+        a = FF(a, b, c, d, M_offset_12,  7, T[12]);
         d = FF(d, a, b, c, M_offset_13, 12, T[13]);
         c = FF(c, d, a, b, M_offset_14, 17, T[14]);
         b = FF(b, c, d, a, M_offset_15, 22, T[15]);
-        a = GG(a, b, c, d, M_offset_1,  5,  T[16]);
-        d = GG(d, a, b, c, M_offset_6,  9,  T[17]);
+        a = GG(a, b, c, d, M_offset_1,   5, T[16]);
+        d = GG(d, a, b, c, M_offset_6,   9, T[17]);
         c = GG(c, d, a, b, M_offset_11, 14, T[18]);
         b = GG(b, c, d, a, M_offset_0,  20, T[19]);
-        a = GG(a, b, c, d, M_offset_5,  5,  T[20]);
-        d = GG(d, a, b, c, M_offset_10, 9,  T[21]);
+        a = GG(a, b, c, d, M_offset_5,   5, T[20]);
+        d = GG(d, a, b, c, M_offset_10,  9, T[21]);
         c = GG(c, d, a, b, M_offset_15, 14, T[22]);
         b = GG(b, c, d, a, M_offset_4,  20, T[23]);
-        a = GG(a, b, c, d, M_offset_9,  5,  T[24]);
-        d = GG(d, a, b, c, M_offset_14, 9,  T[25]);
+        a = GG(a, b, c, d, M_offset_9,   5, T[24]);
+        d = GG(d, a, b, c, M_offset_14,  9, T[25]);
         c = GG(c, d, a, b, M_offset_3,  14, T[26]);
         b = GG(b, c, d, a, M_offset_8,  20, T[27]);
-        a = GG(a, b, c, d, M_offset_13, 5,  T[28]);
-        d = GG(d, a, b, c, M_offset_2,  9,  T[29]);
+        a = GG(a, b, c, d, M_offset_13,  5, T[28]);
+        d = GG(d, a, b, c, M_offset_2,   9, T[29]);
         c = GG(c, d, a, b, M_offset_7,  14, T[30]);
         b = GG(b, c, d, a, M_offset_12, 20, T[31]);
-        a = HH(a, b, c, d, M_offset_5,  4,  T[32]);
+        a = HH(a, b, c, d, M_offset_5,   4, T[32]);
         d = HH(d, a, b, c, M_offset_8,  11, T[33]);
         c = HH(c, d, a, b, M_offset_11, 16, T[34]);
         b = HH(b, c, d, a, M_offset_14, 23, T[35]);
-        a = HH(a, b, c, d, M_offset_1,  4,  T[36]);
+        a = HH(a, b, c, d, M_offset_1,   4, T[36]);
         d = HH(d, a, b, c, M_offset_4,  11, T[37]);
         c = HH(c, d, a, b, M_offset_7,  16, T[38]);
         b = HH(b, c, d, a, M_offset_10, 23, T[39]);
-        a = HH(a, b, c, d, M_offset_13, 4,  T[40]);
+        a = HH(a, b, c, d, M_offset_13,  4, T[40]);
         d = HH(d, a, b, c, M_offset_0,  11, T[41]);
         c = HH(c, d, a, b, M_offset_3,  16, T[42]);
         b = HH(b, c, d, a, M_offset_6,  23, T[43]);
-        a = HH(a, b, c, d, M_offset_9,  4,  T[44]);
+        a = HH(a, b, c, d, M_offset_9,   4, T[44]);
         d = HH(d, a, b, c, M_offset_12, 11, T[45]);
         c = HH(c, d, a, b, M_offset_15, 16, T[46]);
         b = HH(b, c, d, a, M_offset_2,  23, T[47]);
-        a = II(a, b, c, d, M_offset_0,  6,  T[48]);
+        a = II(a, b, c, d, M_offset_0,   6, T[48]);
         d = II(d, a, b, c, M_offset_7,  10, T[49]);
         c = II(c, d, a, b, M_offset_14, 15, T[50]);
         b = II(b, c, d, a, M_offset_5,  21, T[51]);
-        a = II(a, b, c, d, M_offset_12, 6,  T[52]);
+        a = II(a, b, c, d, M_offset_12,  6, T[52]);
         d = II(d, a, b, c, M_offset_3,  10, T[53]);
         c = II(c, d, a, b, M_offset_10, 15, T[54]);
         b = II(b, c, d, a, M_offset_1,  21, T[55]);
-        a = II(a, b, c, d, M_offset_8,  6,  T[56]);
+        a = II(a, b, c, d, M_offset_8,   6, T[56]);
         d = II(d, a, b, c, M_offset_15, 10, T[57]);
         c = II(c, d, a, b, M_offset_6,  15, T[58]);
         b = II(b, c, d, a, M_offset_13, 21, T[59]);
-        a = II(a, b, c, d, M_offset_4,  6,  T[60]);
+        a = II(a, b, c, d, M_offset_4,   6, T[60]);
         d = II(d, a, b, c, M_offset_11, 10, T[61]);
         c = II(c, d, a, b, M_offset_2,  15, T[62]);
         b = II(b, c, d, a, M_offset_9,  21, T[63]);
@@ -431,12 +433,12 @@
         var nBitsTotalH = Math.floor(nBitsTotal / 0x100000000);
         var nBitsTotalL = nBitsTotal;
         dataWords[(((nBitsLeft + 64) >>> 9) << 4) + 15] = (
-	        (((nBitsTotalH << 8)  | (nBitsTotalH >>> 24)) & 0x00ff00ff) |
-	        (((nBitsTotalH << 24) | (nBitsTotalH >>> 8))  & 0xff00ff00)
+	        (((nBitsTotalH <<  8) | (nBitsTotalH >>> 24)) & 0x00ff00ff) |
+	        (((nBitsTotalH << 24) | (nBitsTotalH >>>  8)) & 0xff00ff00)
         );
         dataWords[(((nBitsLeft + 64) >>> 9) << 4) + 14] = (
-          (((nBitsTotalL << 8)  | (nBitsTotalL >>> 24)) & 0x00ff00ff) |
-          (((nBitsTotalL << 24) | (nBitsTotalL >>> 8))  & 0xff00ff00)
+          (((nBitsTotalL <<  8) | (nBitsTotalL >>> 24)) & 0x00ff00ff) |
+          (((nBitsTotalL << 24) | (nBitsTotalL >>>  8)) & 0xff00ff00)
         );
         data.sigBytes = (dataWords.length + 1) * 4;
         this._process();
@@ -444,8 +446,8 @@
         var H = hash.words;
         for(var i = 0; i < 4; i++){
           var H_i = H[i];
-          H[i] = (((H_i << 8)  | (H_i >>> 24)) & 0x00ff00ff) |
-                 (((H_i << 24) | (H_i >>> 8))  & 0xff00ff00);
+          H[i] = (((H_i <<   8) | (H_i >>>  24)) & 0x00ff00ff) |
+                 (((H_i <<  24) | (H_i >>>   8)) & 0xff00ff00);
         }
         return hash;
       },
@@ -484,8 +486,10 @@
     var SHA1 = C_algo.SHA1 = Hasher.extend({
       _doReset: function(){
         this._hash = new WordArray.init([
-          0x67452301, 0xefcdab89,
-          0x98badcfe, 0x10325476,
+          0x67452301,
+          0xefcdab89,
+          0x98badcfe,
+          0x10325476,
           0xc3d2e1f0
         ]);
       },
@@ -530,7 +534,7 @@
         var dataWords = data.words;
         var nBitsTotal = this._nDataBytes * 8;
         var nBitsLeft = data.sigBytes * 8;
-        dataWords[nBitsLeft >>> 5] |= 0x80 << (24 - nBitsLeft % 32);
+        dataWords[nBitsLeft >>> 5] |= 0x80  << (24 - nBitsLeft % 32);
         dataWords[(((nBitsLeft + 64) >>> 9) << 4) + 14] = Math.floor(nBitsTotal / 0x100000000);
         dataWords[(((nBitsLeft + 64) >>> 9) << 4) + 15] = nBitsTotal;
         data.sigBytes = dataWords.length * 4;
@@ -771,15 +775,27 @@
       15,  5,  8, 11, 14, 14,  6, 14,  6,  9, 12,  9, 12,  5, 15,  8,
        8,  5, 12,  9, 12,  5, 14,  6,  8, 13,  6,  5, 15, 13, 11, 11]);
     var _hl =  WordArray.create([
-      0x00000000, 0x5A827999, 0x6ED9EBA1, 0x8F1BBCDC, 0xA953FD4E
+      0x00000000,
+      0x5A827999,
+      0x6ED9EBA1,
+      0x8F1BBCDC,
+      0xA953FD4E
     ]);
     var _hr =  WordArray.create([
-      0x50A28BE6, 0x5C4DD124, 0x6D703EF3, 0x7A6D76E9, 0x00000000
+      0x50A28BE6,
+      0x5C4DD124,
+      0x6D703EF3,
+      0x7A6D76E9,
+      0x00000000
     ]);
 		var RIPEMD160 = C_algo.RIPEMD160 = Hasher.extend({
       _doReset: function(){
         this._hash  = WordArray.create([
-          0x67452301, 0xEFCDAB89, 0x98BADCFE, 0x10325476, 0xC3D2E1F0
+          0x67452301,
+          0xEFCDAB89,
+          0x98BADCFE,
+          0x10325476,
+          0xC3D2E1F0
         ]);
       },
       _doProcessBlock: function(M, offset){
@@ -787,8 +803,8 @@
           var offset_i = offset + i;
           var M_offset_i = M[offset_i];
           M[offset_i] = (
-            (((M_offset_i << 8)  | (M_offset_i >>> 24)) & 0x00ff00ff) |
-            (((M_offset_i << 24) | (M_offset_i >>> 8))  & 0xff00ff00)
+            (((M_offset_i <<  8) | (M_offset_i >>> 24)) & 0x00ff00ff) |
+            (((M_offset_i << 24) | (M_offset_i >>>  8)) & 0xff00ff00)
           );
         }
         var H  = this._hash.words;
@@ -860,7 +876,7 @@
         var dataWords = data.words;
         var nBitsTotal = this._nDataBytes * 8;
         var nBitsLeft = data.sigBytes * 8;
-        dataWords[nBitsLeft >>> 5] |= 0x80 << (24 - nBitsLeft % 32);
+        dataWords[nBitsLeft >>> 5] |= 0x80  << (24 - nBitsLeft % 32);
         dataWords[(((nBitsLeft + 64) >>> 9) << 4) + 14] = (
           (((nBitsTotal << 8)  | (nBitsTotal >>> 24)) & 0x00ff00ff) |
           (((nBitsTotal << 24) | (nBitsTotal >>> 8))  & 0xff00ff00)
@@ -871,7 +887,7 @@
         var H = hash.words;
         for (var i = 0; i < 5; i++){
           var H_i = H[i];
-          H[i] = (((H_i << 8)  | (H_i >>> 24)) & 0x00ff00ff) | (((H_i << 24) | (H_i >>> 8))  & 0xff00ff00);
+          H[i] = (((H_i << 8) | (H_i >>> 24)) & 0x00ff00ff) | (((H_i << 24) | (H_i >>> 8))  & 0xff00ff00);
         }
         return hash;
       },
@@ -1053,8 +1069,14 @@
     var SHA224 = C_algo.SHA224 = SHA256.extend({
       _doReset: function(){
         this._hash = new WordArray.init([
-          0xc1059ed8, 0x367cd507, 0x3070dd17, 0xf70e5939,
-          0xffc00b31, 0x68581511, 0x64f98fa7, 0xbefa4fa4
+          0xc1059ed8,
+          0x367cd507,
+          0x3070dd17,
+          0xf70e5939,
+          0xffc00b31,
+          0x68581511,
+          0x64f98fa7,
+          0xbefa4fa4
         ]);
       },
       _doFinalize: function(){
@@ -1180,12 +1202,12 @@
           var M2i  = M[offset + 2 * i];
           var M2i1 = M[offset + 2 * i + 1];
           M2i = (
-            (((M2i << 8)  | (M2i >>> 24)) & 0x00ff00ff) |
-            (((M2i << 24) | (M2i >>> 8))  & 0xff00ff00)
+            (((M2i <<  8) | (M2i >>> 24)) & 0x00ff00ff) |
+            (((M2i << 24) | (M2i >>>  8)) & 0xff00ff00)
           );
           M2i1 = (
-            (((M2i1 << 8)  | (M2i1 >>> 24)) & 0x00ff00ff) |
-            (((M2i1 << 24) | (M2i1 >>> 8))  & 0xff00ff00)
+            (((M2i1 <<  8) | (M2i1 >>> 24)) & 0x00ff00ff) |
+            (((M2i1 << 24) | (M2i1 >>>  8)) & 0xff00ff00)
           );
           var lane = state[i];
           lane.high ^= M2i1;
@@ -1272,12 +1294,12 @@
             var laneMsw = lane.high;
             var laneLsw = lane.low;
             laneMsw = (
-              (((laneMsw << 8)  | (laneMsw >>> 24)) & 0x00ff00ff) |
-              (((laneMsw << 24) | (laneMsw >>> 8))  & 0xff00ff00)
+              (((laneMsw <<  8) | (laneMsw >>> 24)) & 0x00ff00ff) |
+              (((laneMsw << 24) | (laneMsw >>>  8)) & 0xff00ff00)
             );
             laneLsw = (
-              (((laneLsw << 8)  | (laneLsw >>> 24)) & 0x00ff00ff) |
-              (((laneLsw << 24) | (laneLsw >>> 8))  & 0xff00ff00)
+              (((laneLsw <<  8) | (laneLsw >>> 24)) & 0x00ff00ff) |
+              (((laneLsw << 24) | (laneLsw >>>  8)) & 0xff00ff00)
             );
             hashWords.push(laneLsw);
             hashWords.push(laneMsw);
@@ -1987,14 +2009,14 @@
         var x4 = d[x2];
         var x8 = d[x4];
         var t = (d[sx] * 0x101) ^ (sx * 0x1010100);
-        SUB_MIX_0[x] = (t << 24) | (t >>> 8);
+        SUB_MIX_0[x] = (t << 24) | (t >>>  8);
         SUB_MIX_1[x] = (t << 16) | (t >>> 16);
-        SUB_MIX_2[x] = (t << 8)  | (t >>> 24);
+        SUB_MIX_2[x] = (t <<  8) | (t >>> 24);
         SUB_MIX_3[x] = t;
         var t = (x8 * 0x1010101) ^ (x4 * 0x10001) ^ (x2 * 0x101) ^ (x * 0x1010100);
-        INV_SUB_MIX_0[sx] = (t << 24) | (t >>> 8);
+        INV_SUB_MIX_0[sx] = (t << 24) | (t >>>  8);
         INV_SUB_MIX_1[sx] = (t << 16) | (t >>> 16);
-        INV_SUB_MIX_2[sx] = (t << 8)  | (t >>> 24);
+        INV_SUB_MIX_2[sx] = (t <<  8) | (t >>> 24);
         INV_SUB_MIX_3[sx] = t;
         if (!x){
           x = xi = 1;
@@ -2005,7 +2027,10 @@
       }
 	  }());
     var RCON = [
-      0x00, 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36
+      0x00, 0x01, 0x02,
+      0x04, 0x08, 0x10,
+      0x20, 0x40, 0x80,
+      0x1b, 0x36
     ];
     var AES = C_algo.AES = BlockCipher.extend({
       _doReset: function(){
@@ -2043,7 +2068,7 @@
           } else {
             invKeySchedule[invKsRow] = INV_SUB_MIX_0[SBOX[t >>> 24]] 
             ^ INV_SUB_MIX_1[SBOX[(t >>> 16) & 0xff]] 
-            ^ INV_SUB_MIX_2[SBOX[(t >>> 8) & 0xff]] 
+            ^ INV_SUB_MIX_2[SBOX[(t >>>  8) & 0xff]] 
             ^ INV_SUB_MIX_3[SBOX[t & 0xff]];
           }
         }
@@ -2097,26 +2122,26 @@
     var BlockCipher = C_lib.BlockCipher;
     var C_algo = C.algo;
     var PC1 = [
-      57, 49, 41, 33, 25, 17, 9,  1,
-      58, 50, 42, 34, 26, 18, 10, 2,
-      59, 51, 43, 35, 27, 19, 11, 3,
+      57, 49, 41, 33, 25, 17,  9,  1,
+      58, 50, 42, 34, 26, 18, 10,  2,
+      59, 51, 43, 35, 27, 19, 11,  3,
       60, 52, 44, 36, 63, 55, 47, 39,
-      31, 23, 15, 7,  62, 54, 46, 38,
-      30, 22, 14, 6,  61, 53, 45, 37,
-      29, 21, 13, 5,  28, 20, 12, 4
+      31, 23, 15,  7, 62, 54, 46, 38,
+      30, 22, 14,  6, 61, 53, 45, 37,
+      29, 21, 13,  5, 28, 20, 12,  4
     ];
     var PC2 = [
-      14, 17, 11, 24, 1,  5,
-      3,  28, 15, 6,  21, 10,
-      23, 19, 12, 4,  26, 8,
-      16, 7,  27, 20, 13, 2,
+      14, 17, 11, 24,  1,  5,
+       3, 28, 15,  6, 21, 10,
+      23, 19, 12,  4, 26,  8,
+      16,  7, 27, 20, 13,  2,
       41, 52, 31, 37, 47, 55,
       30, 40, 51, 45, 33, 48,
       44, 49, 39, 56, 34, 53,
       46, 42, 50, 36, 29, 32
     ];
     var BIT_SHIFTS = [
-      1,  2,  4,  6,  8,  10,
+       1,  2,  4,  6,  8, 10,
       12, 14, 15, 17, 19, 21,
       23, 25, 27, 28
     ];
@@ -2644,8 +2669,14 @@
       }
     ];
     var SBOX_MASK = [
-      0xf8000001, 0x1f800000, 0x01f80000, 0x001f8000,
-      0x0001f800, 0x00001f80, 0x000001f8, 0x8000001f
+      0xf8000001,
+      0x1f800000,
+      0x01f80000,
+      0x001f8000,
+      0x0001f800,
+      0x00001f80,
+      0x000001f8,
+      0x8000001f
     ];
     var DES = C_algo.DES = BlockCipher.extend({
       _doReset: function(){
@@ -2684,17 +2715,17 @@
       _doCryptBlock: function(M, offset, subKeys){
         this._lBlock = M[offset];
         this._rBlock = M[offset + 1];
-        exchangeLR.call(this, 4,  0x0f0f0f0f);
+        exchangeLR.call(this,  4, 0x0f0f0f0f);
         exchangeLR.call(this, 16, 0x0000ffff);
-        exchangeRL.call(this, 2,  0x33333333);
-        exchangeRL.call(this, 8,  0x00ff00ff);
-        exchangeLR.call(this, 1,  0x55555555);
+        exchangeRL.call(this,  2, 0x33333333);
+        exchangeRL.call(this,  8, 0x00ff00ff);
+        exchangeLR.call(this,  1, 0x55555555);
         for (var round = 0; round < 16; round++){
           var subKey = subKeys[round];
           var lBlock = this._lBlock;
           var rBlock = this._rBlock;
           var f = 0;
-          for (var i = 0; i < 8; i++) {
+          for (var i = 0; i < 8; i++){
             f |= SBOX_P[i][((rBlock ^ subKey[i]) & SBOX_MASK[i]) >>> 0];
           }
           this._lBlock = rBlock;
@@ -2703,17 +2734,17 @@
         var t = this._lBlock;
         this._lBlock = this._rBlock;
         this._rBlock = t;
-        exchangeLR.call(this, 1,  0x55555555);
-        exchangeRL.call(this, 8,  0x00ff00ff);
-        exchangeRL.call(this, 2,  0x33333333);
+        exchangeLR.call(this,  1, 0x55555555);
+        exchangeRL.call(this,  8, 0x00ff00ff);
+        exchangeRL.call(this,  2, 0x33333333);
         exchangeLR.call(this, 16, 0x0000ffff);
-        exchangeLR.call(this, 4,  0x0f0f0f0f);
+        exchangeLR.call(this,  4, 0x0f0f0f0f);
         M[offset] = this._lBlock;
         M[offset + 1] = this._rBlock;
       },
-      keySize: 64/32,
-      ivSize: 64/32,
-      blockSize: 64/32
+      keySize:    64/32,
+      ivSize:     64/32,
+      blockSize:  64/32
     });
     function exchangeLR(offset, mask){
       var t = ((this._lBlock >>> offset) ^ this._rBlock) & mask;
@@ -2727,7 +2758,7 @@
     }
     C.DES = BlockCipher._createHelper(DES);
     var TripleDES = C_algo.TripleDES = BlockCipher.extend({
-      _doReset: function (){
+      _doReset: function(){
         var key = this._key;
         var keyWords = key.words;
         this._des1 = DES.createEncryptor(WordArray.create(keyWords.slice(0, 2)));
@@ -2744,9 +2775,9 @@
         this._des2.encryptBlock(M, offset);
         this._des1.decryptBlock(M, offset);
       },
-      keySize: 192/32,
-      ivSize: 64/32,
-      blockSize: 64/32
+      keySize:   192/32,
+      ivSize:     64/32,
+      blockSize:  64/32
     });
 	  C.TripleDES = BlockCipher._createHelper(TripleDES);
 	}());
@@ -2769,16 +2800,16 @@
           var keyByte = (keyWords[keyByteIndex >>> 2] >>> (24 - (keyByteIndex % 4) * 8)) & 0xff;
           j = (j + S[i] + keyByte) % 256;
           var t = S[i];
-          S[i] = S[j];
-          S[j] = t;
+          S[i]  = S[j];
+          S[j]  = t;
         }
         this._i = this._j = 0;
       },
       _doProcessBlock: function(M, offset){
         M[offset] ^= generateKeystreamWord.call(this);
       },
-      keySize: 256/32,
-      ivSize: 0
+      keySize:   256/32,
+      ivSize:    0
     });
     function generateKeystreamWord(){
       var S = this._S;
@@ -2963,13 +2994,13 @@
         G[i] = gh ^ gl;
       }
       X[0] = (G[0] + ((G[7] << 16) | (G[7] >>> 16)) + ((G[6] << 16) | (G[6] >>> 16))) | 0;
-      X[1] = (G[1] + ((G[0] << 8)  | (G[0] >>> 24)) + G[7]) | 0;
+      X[1] = (G[1] + ((G[0] <<  8) | (G[0] >>> 24)) +   G[7]) | 0;
       X[2] = (G[2] + ((G[1] << 16) | (G[1] >>> 16)) + ((G[0] << 16) | (G[0] >>> 16))) | 0;
-      X[3] = (G[3] + ((G[2] << 8)  | (G[2] >>> 24)) + G[1]) | 0;
+      X[3] = (G[3] + ((G[2] <<  8) | (G[2] >>> 24)) +   G[1]) | 0;
       X[4] = (G[4] + ((G[3] << 16) | (G[3] >>> 16)) + ((G[2] << 16) | (G[2] >>> 16))) | 0;
-      X[5] = (G[5] + ((G[4] << 8)  | (G[4] >>> 24)) + G[3]) | 0;
+      X[5] = (G[5] + ((G[4] <<  8) | (G[4] >>> 24)) +   G[3]) | 0;
       X[6] = (G[6] + ((G[5] << 16) | (G[5] >>> 16)) + ((G[4] << 16) | (G[4] >>> 16))) | 0;
-      X[7] = (G[7] + ((G[6] << 8)  | (G[6] >>> 24)) + G[5]) | 0;
+      X[7] = (G[7] + ((G[6] <<  8) | (G[6] >>> 24)) +   G[5]) | 0;
     }
 	  C.Rabbit = StreamCipher._createHelper(Rabbit);
 	}());
@@ -3031,10 +3062,10 @@
           var IV = iv.words;
           var IV_0 = IV[0];
           var IV_1 = IV[1];
-          var i0 = (((IV_0 << 8) | (IV_0 >>> 24)) & 0x00ff00ff) | (((IV_0 << 24) | (IV_0 >>> 8)) & 0xff00ff00);
-          var i2 = (((IV_1 << 8) | (IV_1 >>> 24)) & 0x00ff00ff) | (((IV_1 << 24) | (IV_1 >>> 8)) & 0xff00ff00);
-          var i1 = (i0 >>> 16) | (i2 & 0xffff0000);
-          var i3 = (i2 << 16)  | (i0 & 0x0000ffff);
+          var i0 =  (((IV_0 <<  8) | (IV_0 >>> 24)) & 0x00ff00ff) | (((IV_0 << 24) | (IV_0 >>> 8)) & 0xff00ff00);
+          var i2 =  (((IV_1 <<  8) | (IV_1 >>> 24)) & 0x00ff00ff) | (((IV_1 << 24) | (IV_1 >>> 8)) & 0xff00ff00);
+          var i1 =    (i0  >>> 16) | (i2 & 0xffff0000);
+          var i3 =    (i2   << 16) | (i0 & 0x0000ffff);
           C[0] ^= i0;
           C[1] ^= i1;
           C[2] ^= i2;
@@ -3087,13 +3118,13 @@
         G[i] = gh ^ gl;
       }
       X[0] = (G[0] + ((G[7] << 16) | (G[7] >>> 16)) + ((G[6] << 16) | (G[6] >>> 16))) | 0;
-      X[1] = (G[1] + ((G[0] << 8)  | (G[0] >>> 24)) + G[7]) | 0;
+      X[1] = (G[1] + ((G[0] <<  8) | (G[0] >>> 24)) +   G[7]) | 0;
       X[2] = (G[2] + ((G[1] << 16) | (G[1] >>> 16)) + ((G[0] << 16) | (G[0] >>> 16))) | 0;
-      X[3] = (G[3] + ((G[2] << 8)  | (G[2] >>> 24)) + G[1]) | 0;
+      X[3] = (G[3] + ((G[2] <<  8) | (G[2] >>> 24)) +   G[1]) | 0;
       X[4] = (G[4] + ((G[3] << 16) | (G[3] >>> 16)) + ((G[2] << 16) | (G[2] >>> 16))) | 0;
-      X[5] = (G[5] + ((G[4] << 8)  | (G[4] >>> 24)) + G[3]) | 0;
+      X[5] = (G[5] + ((G[4] <<  8) | (G[4] >>> 24)) +   G[3]) | 0;
       X[6] = (G[6] + ((G[5] << 16) | (G[5] >>> 16)) + ((G[4] << 16) | (G[4] >>> 16))) | 0;
-      X[7] = (G[7] + ((G[6] << 8)  | (G[6] >>> 24)) + G[5]) | 0;
+      X[7] = (G[7] + ((G[6] <<  8) | (G[6] >>> 24)) +   G[5]) | 0;
     }
     C.RabbitLegacy = StreamCipher._createHelper(RabbitLegacy);
 	}());
