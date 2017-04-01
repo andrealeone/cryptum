@@ -482,7 +482,7 @@
     var C_algo = C.algo;
     var W = [];
     var SHA1 = C_algo.SHA1 = Hasher.extend({
-      _doReset: function () {
+      _doReset: function(){
         this._hash = new WordArray.init([
           0x67452301, 0xefcdab89,
           0x98badcfe, 0x10325476,
@@ -747,11 +747,11 @@
     var Hasher = C_lib.Hasher;
     var C_algo = C.algo;
     var _zl = WordArray.create([
-      0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15,
-      7,  4, 13,  1, 10,  6, 15,  3, 12,  0,  9,  5,  2, 14, 11,  8,
-      3, 10, 14,  4,  9, 15,  8,  1,  2,  7,  0,  6, 13, 11,  5, 12,
-      1,  9, 11, 10,  0,  8, 12,  4, 13,  3,  7, 15, 14,  5,  6,  2,
-      4,  0,  5,  9,  7, 12,  2, 10, 14,  1,  3,  8, 11,  6, 15, 13]);
+       0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15,
+       7,  4, 13,  1, 10,  6, 15,  3, 12,  0,  9,  5,  2, 14, 11,  8,
+       3, 10, 14,  4,  9, 15,  8,  1,  2,  7,  0,  6, 13, 11,  5, 12,
+       1,  9, 11, 10,  0,  8, 12,  4, 13,  3,  7, 15, 14,  5,  6,  2,
+       4,  0,  5,  9,  7, 12,  2, 10, 14,  1,  3,  8, 11,  6, 15, 13]);
     var _zr = WordArray.create([
        5, 14,  7,  0,  9,  2, 11,  4, 13,  6, 15,  8,  1, 10,  3, 12,
        6, 11,  3,  7,  0, 13,  5, 10, 14, 15,  8, 12,  4,  9,  1,  2,
@@ -1098,7 +1098,7 @@
         }
         return X32WordArray.create(x32Words, this.sigBytes);
       },
-      clone: function () {
+      clone: function(){
         var clone = Base.clone.call(this);
         var words = clone.words = this.words.slice(0);
         var wordsLength = words.length;
@@ -1221,7 +1221,7 @@
             var laneMsw = lane.high;
             var laneLsw = lane.low;
             var rhoOffset = RHO_OFFSETS[laneIndex];
-            if (rhoOffset < 32) {
+            if (rhoOffset < 32){
               var tMsw = (laneMsw << rhoOffset) | (laneLsw >>> (32 - rhoOffset));
               var tLsw = (laneLsw << rhoOffset) | (laneMsw >>> (32 - rhoOffset));
             } else {
@@ -1267,7 +1267,7 @@
           var outputLengthBytes = this.cfg.outputLength / 8;
           var outputLengthLanes = outputLengthBytes / 8;
           var hashWords = [];
-          for (var i = 0; i < outputLengthLanes; i++) {
+          for (var i = 0; i < outputLengthLanes; i++){
             var lane = state[i];
             var laneMsw = lane.high;
             var laneLsw = lane.low;
@@ -1574,7 +1574,7 @@
         return this._process();
       },
       finalize: function(dataUpdate){
-        if (dataUpdate) {
+        if (dataUpdate){
           this._append(dataUpdate);
         }
         var finalProcessedData = this._doFinalize();
@@ -2971,7 +2971,7 @@
         var blockSize = cipher.blockSize;
         var iv = this._iv;
         var counter = this._counter;
-        if (iv) {
+        if (iv){
           counter = this._counter = iv.slice(0);
           this._iv = undefined;
         }
