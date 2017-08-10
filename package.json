@@ -1,0 +1,29 @@
+{
+  "name": "cryptum",
+  "version": "1.2.0",
+  "description": "A fast and lightweight set of cryptographic tools.",
+  "main": "cryptum.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andrealeone/Cryptum.git"
+  },
+  "keywords": [
+    "cryptum",
+    "javascript",
+    "cryptography",
+    "security",
+    "cypherpunk"
+  ],
+  "author": "Andrea Leone <github@andrealeone.xyz>",
+  "license": "WTFPL",
+  "wiki": {
+    "url": "https://github.com/andrealeone/Cryptum/wiki"
+  },
+  "releases": {
+    "url": "https://github.com/andrealeone/Cryptum/releases"
+  },
+  "bugs": {
+    "url": "https://github.com/andrealeone/Cryptum/issues"
+  },
+  "homepage": "https://github.com/andrealeone/Cryptum#readme"
+}
